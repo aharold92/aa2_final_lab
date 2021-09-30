@@ -1,0 +1,28 @@
+---
+- name: deploy postgres12 to database server
+  hosts: database_servers 
+  become: true
+  gather_facts: false
+  
+
+  tasks:
+    
+
+    - name: gather resolve.conf information
+      command: "more /etc/resolv.conf"
+      register: DNS_information
+
+    - debug:
+        msg: "{{ DNS_information }}"
+
+    - name: deploy firewalld
+      import_role:
+        name: firewall
+      vars:
+        firewall_services:
+          - postgresql
+        firewall_tcp_ports:
+          - 5432
+    - name: deploy database role
+      import_role:
+        name: postgres

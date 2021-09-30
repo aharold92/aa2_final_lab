@@ -1,0 +1,7 @@
+---
+
+- name: create final lab OSP instances 
+  hosts: localhost
+
+  roles:
+    - cloud_deployment

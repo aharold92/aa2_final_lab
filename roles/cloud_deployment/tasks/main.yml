@@ -1,0 +1,16 @@
+---
+
+- name: create openstack servers 
+  openstack.cloud.server:
+    cloud: 87f8-project
+    name: "{{ __osp_instances.server_name }}"
+    image: "{{ __osp_instances.image }}"
+    flavor: "{{ __osp_instances.flavor }}"
+    security_groups: "{{ __osp_instances.security_group }}"
+    meta: "{{ __osp_instances.metadata }}" 
+    key_name: "{{ __osp_instances.keypair }}"
+    nics:
+      - net-name: 87f8-dev-network
+  loop: "{{ osp_instances }}"
+  loop_control:
+    loop_var: __osp_instances

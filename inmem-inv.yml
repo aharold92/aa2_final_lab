@@ -1,0 +1,47 @@
+---
+- name: in-memory inventory
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    internal_domain: "example.com"
+
+  tasks:
+
+    - name: collection instance info
+      os_server_info:
+        cloud: "87f8-project"
+      register: instances
+
+    - name: build memory
+      add_host:
+        host: "{{ instance.name }}.{{ internal_domain }}"
+        group: "{{ instance.metadata.group }}"
+        ansible_host: "{{ instance.private_v4 }}"
+        ssh_private_key_file: /home/devops/.ssh/87f8key.pem
+      when: instance.metadata.AnsibleGroup == "final_lab_osp_instances"
+      loop: "{{ instances.openstack_servers }}"
+      loop_control:
+        loop_var: instance
+
+    - debug:
+        msg: "{{ instances }}"
+
+- name: print current hosts
+  hosts: localhost
+  gather_facts: false 
+
+  tasks:
+    - debug: var=groups
+
+- name: verify openstack instances
+  hosts: database_servers
+  gather_facts: true
+  tasks:
+
+    - name: verify connectivity
+      ping:
+      register: output
+
+    - debug:
+        msg: "{{ output }}"

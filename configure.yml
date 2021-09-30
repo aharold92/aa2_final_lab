@@ -1,0 +1,60 @@
+---
+
+- name: configure the final lab osp instances
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    DNS_IP: "192.168.50.105"
+
+  tasks:
+
+    - name: test the connection
+      ping:
+      register: output
+
+    - debug:
+        msg: "{{ output }}"
+
+    - name: add a line into file
+      lineinfile:
+        state: present
+        path: /etc/sysconfig/network-scripts/ifcfg-eth0
+        line: "{{ item }}"
+      loop:
+        - PEERDNS=no
+        - DNS1={{ DNS_IP }}
+      register: network_update
+
+    - name: restart network manager
+      service:
+        name: NetworkManager
+        state: restarted
+      when: network_update.changed | bool
+
+    - name: gather resolve.conf information
+      command: "more /etc/resolv.conf"
+      register: DNS_information
+
+    - debug:
+        msg: "{{ DNS_information }}"
+
+    - name: install katello
+      yum:
+        name: http://satellite.example.com/pub/katello-ca-consumer-latest.noarch.rpm
+        state: latest
+        disable_gpg_check: yes
+
+    - name: configure host subscription
+      redhat_subscription:
+#        server_hostname: satellite.example.com
+        org_id: prod
+        activationkey: gpte-labs-rhel8
+        state: present
+        auto_attach: yes
+
+    - name: install firewalld
+      yum:
+        name: firewalld
+        state: latest

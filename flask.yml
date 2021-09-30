@@ -1,0 +1,32 @@
+---
+
+- name: deploy flask
+  hosts: app_servers
+  become: true
+  gather_facts: true
+  tags:
+    - app_servers
+
+  tasks:
+
+    - name: gather resolve.conf information
+      command: "more /etc/resolv.conf"
+      register: DNS_information
+
+    - debug:
+        msg: "{{ DNS_information }}"
+
+
+    - name: deploy firewalld
+      import_role:
+        name: firewall
+      vars:
+        firewall_services:
+          - http
+        firewall_tcp_ports:
+          - 5000
+
+    - name: deploy flask on application servers
+      import_role:
+        name: flask
+

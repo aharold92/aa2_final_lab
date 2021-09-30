@@ -1,0 +1,21 @@
+---
+
+- name: deploy the load balancers
+  hosts: load_balancers
+  gather_facts: false
+  become: yes
+
+  tasks:
+
+    - name: install firewall
+      import_role:
+        name: firewall
+      vars:
+        firewall_services:
+          - http
+        firewall_tcp_ports:
+          - 5000
+
+    - name: deploy haproxy
+      import_role:
+        name: haproxy
