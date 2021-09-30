@@ -22,12 +22,23 @@
         - smoketest
 
 - name: End to end smoke tests
-  hosts: app_servers
+  hosts: app_servers:load_balancers
   become: false
   gather_facts: false
   tags:
     - smoketest
   tasks:
+
+    - debug:
+        msg: "{{ hostvars[groups.load_balancers[0]].ansible_default_ipv4.address }}"
+     
+    - name: rl an ip
+      shell: "curl {{ hostvars[groups.load_balancers[0]].ansible_default_ipv4.address }}"
+      register: output
+      delegate_to: localhost
+
+    - debug:
+        msg: "{{ output }}"
 
     - name: Check webserver for correct response
       uri:
