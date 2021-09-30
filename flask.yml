@@ -25,6 +25,7 @@
           - http
         firewall_tcp_ports:
           - 5000
+          - 8080
 
     - name: deploy flask on application servers
       import_role:
