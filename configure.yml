@@ -1,7 +1,7 @@
 ---
 
 - name: configure the final lab osp instances
-  hosts: all 
+  hosts: database_servers:control 
   become: yes
   gather_facts: yes
 
