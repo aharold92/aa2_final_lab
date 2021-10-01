@@ -10,7 +10,8 @@
 
     - name: collection instance info
       os_server_info:
-        cloud: devstack 
+#        cloud: devstack 
+        cloud: 87f8-project
       register: instances
 
     - name: build memory

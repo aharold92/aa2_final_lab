@@ -22,27 +22,29 @@
         - smoketest
 
 - name: End to end smoke tests
-  hosts: app_servers
+  hosts: app_servers:load_balancers
   become: false
-  gather_facts: false
   tags:
     - smoketest
   tasks:
 
     - debug:
-        msg: "{{ hostvars[groups.load_balancers[0]].ansible_default_ipv4.address }}"
-     
-    - name: curl an ip
-      shell: "curl {{ hostvars[groups.load_balancers[0]].ansible_default_ipv4.address }}"
+        msg: "{{ hostvars[groups.load_balancers[0]].ansible_facts.default_ipv4.address }}"
       register: output
-      delegate_to: localhost
+      run_once: true
+
+#    - name: curl an ip
+#      shell: "curl {{ hostvars[groups.load_balancers[0]].ansible_default_ipv4.address }}"
+#      register: output
+#      delegate_to: localhost
 
     - debug:
-        msg: "{{ output }}"
+        msg: "Frontend server IP address is {{ output }}"
+      run_once: true
 
     - name: Check webserver for correct response
       uri:
-        url: "http://192.168.51.13/ping"
+        url: "http://{{ hostvars[groups.load_balancers[0]].ansible_facts.default_ipv4.address }}/ping"
         return_content: yes
       until: '"alive" in result.content'
       retries: 10
