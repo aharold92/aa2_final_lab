@@ -1,7 +1,7 @@
 ---
 
 - name: configure the final lab osp instances
-  hosts: app_servers:load_balancers:database_servers:control #designate control for AT, localhost otherwise 
+  hosts: app_servers:load_balancers:database_servers:localhost #designate control for AT, localhost otherwise 
   become: yes
   gather_facts: yes
 
