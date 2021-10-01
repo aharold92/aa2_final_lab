@@ -1,5 +1,5 @@
 ---
 
 collections:
-  - name: postgresql
+  - name: community.postgresql
   - name: openstack.cloud
