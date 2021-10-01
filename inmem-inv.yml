@@ -35,8 +35,13 @@
   tasks:
     - debug: var=groups
 
+    - name: give hosts time to boot
+      wait_for:
+        timeout: 60
+      delegate_to: localhost
+
 - name: verify openstack instances
-  hosts: database_servers
+  hosts: all
   gather_facts: true
   tasks:
 
@@ -46,3 +51,4 @@
 
     - debug:
         msg: "{{ output }}"
+

@@ -3,6 +3,7 @@
 - name: create openstack servers 
   openstack.cloud.server:
     cloud: devstack 
+#    cloud: 87f8-project
     name: "{{ __osp_instances.server_name }}"
     image: "{{ __osp_instances.image }}"
     flavor: "{{ __osp_instances.flavor }}"
