@@ -10,7 +10,7 @@
 
     - name: collection instance info
       os_server_info:
-        cloud: "devstack"
+        cloud: devstack 
       register: instances
 
     - name: build memory
