@@ -6,4 +6,4 @@
 - import_playbook: database.yml
 - import_playbook: flask.yml
 - import_playbook: smoketest.yml
-- import_playbook: teardown.yml
+#- import_playbook: teardown.yml

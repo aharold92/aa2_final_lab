@@ -21,8 +21,8 @@
         line: "{{ item }}"
       loop:
         - PEERDNS=no
-#        - DNS1={{ hostvars.localhost.ansible_facts.default_ipv4.address }}
-        - DNS1={{ hostvars.control.ansible_facts.default_ipv4.address }} #necessary for AT
+        - DNS1={{ hostvars.localhost.ansible_facts.default_ipv4.address }}
+#        - DNS1={{ hostvars.control.ansible_facts.default_ipv4.address }} #necessary for AT
       register: network_update
 
     - name: restart network manager
